@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-argo-application
+  namespace: argocd   # must be the same namespace where ArgoCD is installed
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mohammedzuhair25/deploy-example.git
+    targetRevision: HEAD   # can be a branch, tag, or commit
+    path: dev-httpd        # folder inside repo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: myapp
+  syncPolicy:
+    automated:             # auto-sync enabled
+      prune: true          # delete resources not in Git
+      selfHeal: true       # auto-correct drift
+    syncOptions:
+    - CreateNamespace=true # create namespace if missing
